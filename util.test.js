@@ -1,24 +1,15 @@
 const { generateText, checkAndGenerate, validateInput } = require('./util');
 const puppeteer = require('puppeteer');
 
-test('should output name and age', () => {
 
-    const test = generateText('danijel', 40);
+describe('Integration testing', () => {
+    test('should generate valid text-output', () => {
 
-    expect(test).toBe('danijel (40 years old)');
+        const text = checkAndGenerate('danijel', 40);
 
-    const test2 = generateText('irena', 38);
-
-    expect(test2).toBe('irena (38 years old)');
+        expect(text).toBe('danijel (40 years old)');
+    });
 });
-
-test('should generate valid text-output', () => {
-
-    const text = checkAndGenerate('danijel', 40);
-
-    expect(text).toBe('danijel (40 years old)');
-});
-
 
 describe('UNIT testing', () => {
     test('should validate name input', () => {
@@ -34,12 +25,21 @@ describe('UNIT testing', () => {
 
         expect(validateNumber).toBe(true);
     });
+    test('should output name and age', () => {
+
+        const test = generateText('danijel', 40);
+
+        expect(test).toBe('danijel (40 years old)');
+
+        const test2 = generateText('irena', 38);
+
+        expect(test2).toBe('irena (38 years old)');
+    });
+
 });
 
-
-
 describe('E2E testing', () => {
-    test('should click around', async () => {
+    test('should add name, age and expect list item content match', async () => {
         const browser = await puppeteer.launch({
             headless: true,
             slowMo: 80,
