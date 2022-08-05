@@ -1,5 +1,5 @@
 const { generateText, checkAndGenerate, validateInput } = require('./util');
-
+const puppeteer = require('puppeteer');
 
 test('should output name and age', () => {
 
@@ -14,21 +14,37 @@ test('should output name and age', () => {
 
 test('should generate valid text-output', () => {
 
-    const text  = checkAndGenerate('danijel',40);
+    const text = checkAndGenerate('danijel', 40);
 
     expect(text).toBe('danijel (40 years old)');
 });
 
 test('should validate name input', () => {
 
-    const validateText  = validateInput('dani', true, true);
+    const validateText = validateInput('dani', true, true);
 
     expect(validateText).toBe(true);
 
 });
 test('should validate age input', () => {
 
-    const validateNumber  = validateInput(23, false, true);
+    const validateNumber = validateInput(23, false, true);
 
     expect(validateNumber).toBe(true);
 });
+
+test('should click around', async () => {
+    const browser = await puppeteer.launch({
+        headless: true,
+        slowMo: 80,
+        args: ['--window-size=1920,1080']
+    })
+    const page = await browser.newPage();
+    await page.goto('http://127.0.0.1:5500/index.html');
+    await page.click('input#name');
+    await page.type('input#name', 'danijel');
+    await page.type('input#age', '40');
+    await page.click('#btnAddUser');
+    const finalText = await page.$eval('.user-item', el => el.textContent);
+    expect(finalText).toBe('danijel (40 years old)');
+}, 10000);
