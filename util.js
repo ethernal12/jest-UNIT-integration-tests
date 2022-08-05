@@ -1,3 +1,5 @@
+const { fetchData } = require('./http');
+
 exports.generateText = (name, age) => {
   // Returns output text
   return `${name} (${age} years old)`;
@@ -36,3 +38,18 @@ exports.checkAndGenerate = (name, age) => {
   return this.generateText(name, age);
 
 };
+
+exports.loadTitle = () => {
+  return fetchData().then(extractedData => {
+    const title = extractedData.title;
+    const transformedTitle = title.toUpperCase();
+    return transformedTitle;
+  });
+};
+
+exports.printTitle = () => {
+  loadTitle().then(title => {
+    console.log(title);
+  });
+};
+// exports.loadTitle = loadTitle();
