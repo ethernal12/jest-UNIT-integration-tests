@@ -1,4 +1,4 @@
-const { generateText, checkAndGenerate, validateInput, loadTitle } = require('./util');
+const { generateText, checkAndGenerate, validateInput, loadTitle, trimAndUppercaseIt } = require('./util');
 const puppeteer = require('puppeteer');
 
 // jest.mock('./http');
@@ -57,13 +57,19 @@ const puppeteer = require('puppeteer');
 //     }, 10000);
 // });
 
-describe('Test axios get method', () => {
-    test('should get upper case string from axios get', () => {
-        loadTitle().then(title => {
-            expect(title).toBe('DELECTUS AUT AUTEM');
+// describe('Test axios get method', () => {
+//     test('should get upper case string from axios get', () => {
+//         loadTitle().then(title => {
+//             expect(title).toBe('DELECTUS AUT AUTEM');
 
-        })
+//         })
        
-    });
+//     });
 
-});
+// });
+test('should uppercase the movie tiutle', () => {
+    const movieTitle = '    x-men:fIRSt cLass    ';
+    const trimUppercaseIt = trimAndUppercaseIt(movieTitle, 'every word capitilized');
+    console.log(trimUppercaseIt);
+    expect(trimUppercaseIt).toBe('X-Men: First Class');
+})
