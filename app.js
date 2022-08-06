@@ -1,10 +1,13 @@
-const { checkAndGenerate, createElement } = require('./util');
+const { checkAndGenerate, createElement, printTitle } = require('./util');
 
 const initApp = () => {
   // Initializes the app, registers the button click listener
   const newUserButton = document.querySelector('#btnAddUser');
   newUserButton.addEventListener('click', addUser);
+  const button = document.querySelector('#btnGetAxios');
+  button.addEventListener('click', printTitle);
 };
+
 
 const addUser = () => {
   // Fetches the user input, creates a new HTML element based on it
@@ -27,6 +30,7 @@ const addUser = () => {
   const element = createElement('li', outputText, 'user-item');
   userList.appendChild(element);
 };
+
 
 // Start the app!
 initApp();
