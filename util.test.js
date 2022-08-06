@@ -1,75 +1,72 @@
 const { generateText, checkAndGenerate, validateInput, loadTitle, trimAndUppercaseIt } = require('./util');
 const puppeteer = require('puppeteer');
 
-// jest.mock('./http');
+describe('Integration testing', () => {
+    test('should generate valid text-output', () => {
 
-// describe('Integration testing', () => {
-//     test('should generate valid text-output', () => {
+        const text = checkAndGenerate('danijel', 40);
 
-//         const text = checkAndGenerate('danijel', 40);
+        expect(text).toBe('danijel (40 years old)');
+    });
+});
 
-//         expect(text).toBe('danijel (40 years old)');
-//     });
-// });
+describe('UNIT testing', () => {
+    test('should validate name input', () => {
 
-// describe('UNIT testing', () => {
-//     test('should validate name input', () => {
+        const validateText = validateInput('dani', true, true);
 
-//         const validateText = validateInput('dani', true, true);
+        expect(validateText).toBe(true);
 
-//         expect(validateText).toBe(true);
+    });
+    test('should validate age input', () => {
 
-//     });
-//     test('should validate age input', () => {
+        const validateNumber = validateInput(23, false, true);
 
-//         const validateNumber = validateInput(23, false, true);
+        expect(validateNumber).toBe(true);
+    });
+    test('should output name and age', () => {
 
-//         expect(validateNumber).toBe(true);
-//     });
-//     test('should output name and age', () => {
+        const test = generateText('danijel', 40);
 
-//         const test = generateText('danijel', 40);
+        expect(test).toBe('danijel (40 years old)');
 
-//         expect(test).toBe('danijel (40 years old)');
+        const test2 = generateText('irena', 38);
 
-//         const test2 = generateText('irena', 38);
+        expect(test2).toBe('irena (38 years old)');
+    });
 
-//         expect(test2).toBe('irena (38 years old)');
-//     });
+});
 
-// });
+describe('E2E testing', () => {
+    test('should add name, age and expect list item content match', async () => {
+        const browser = await puppeteer.launch({
+            headless: true,
+            slowMo: 80,
+            args: ['--window-size=1920,1080']
+        })
+        const page = await browser.newPage();
+        await page.goto('http://127.0.0.1:5500/index.html');
+        await page.click('input#name');
+        await page.type('input#name', 'danijel');
+        await page.type('input#age', '40');
+        await page.click('#btnAddUser');
+        const finalText = await page.$eval('.user-item', el => el.textContent);
+        expect(finalText).toBe('danijel (40 years old)');
+    }, 10000);
+});
 
-// describe('E2E testing', () => {
-//     test('should add name, age and expect list item content match', async () => {
-//         const browser = await puppeteer.launch({
-//             headless: true,
-//             slowMo: 80,
-//             args: ['--window-size=1920,1080']
-//         })
-//         const page = await browser.newPage();
-//         await page.goto('http://127.0.0.1:5500/index.html');
-//         await page.click('input#name');
-//         await page.type('input#name', 'danijel');
-//         await page.type('input#age', '40');
-//         await page.click('#btnAddUser');
-//         const finalText = await page.$eval('.user-item', el => el.textContent);
-//         expect(finalText).toBe('danijel (40 years old)');
-//     }, 10000);
-// });
+describe('Test axios get method', () => {
+    test('should get upper case string from axios get', () => {
+        loadTitle().then(title => {
+            expect(title).toBe('DELECTUS AUT AUTEM');
 
-// describe('Test axios get method', () => {
-//     test('should get upper case string from axios get', () => {
-//         loadTitle().then(title => {
-//             expect(title).toBe('DELECTUS AUT AUTEM');
-
-//         })
+        })
        
-//     });
+    });
 
-// });
-test('should uppercase the movie tiutle', () => {
-    const movieTitle = '    x-men:fIRSt cLass    ';
+});
+test('should uppercase the movie title', () => {
+    const movieTitle = '    the godfather   ';
     const trimUppercaseIt = trimAndUppercaseIt(movieTitle, 'every word capitilized');
-    console.log(trimUppercaseIt);
-    expect(trimUppercaseIt).toBe('X-Men: First Class');
+    expect(trimUppercaseIt).toBe('The Godfather');
 })
